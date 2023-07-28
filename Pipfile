@@ -13,6 +13,7 @@ alembic = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 python-multipart = "*"
+email-validator = "*"
 
 [dev-packages]
 autopep8 = "*"
