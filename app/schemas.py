@@ -9,6 +9,7 @@ class UserBase(SQLModel):
 
     email: str = Field(unique=True, max_length=255, index=True)
 
+    @validator("email")
     def email_valid(cls, value):
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
         if not re.fullmatch(regex, value):
