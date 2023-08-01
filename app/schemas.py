@@ -18,6 +18,22 @@ class UserBase(SQLModel):
         return value
 
 
+class RecommendationBase(SQLModel):
+    title: str = Field(max_length=255)
+    short_description: str
+    opinion: str
+
+
+class FictionTypeBase(SQLModel):
+    name: str = Field(min_length=4,
+                      max_length=255,
+                      unique=True)
+
+
+class TagBase(SQLModel):
+    name: str
+
+
 class UserCreate(UserBase):
     password: str = Field(min_length=8)
 
