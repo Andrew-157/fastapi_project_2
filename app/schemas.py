@@ -57,6 +57,10 @@ class CommentBase(SQLModel):
     content: str
 
 
+class ReactionBase(SQLModel):
+    is_positive: bool
+
+
 class RecommendationRead(RecommendationBase):
     id: int
     user_id: int
