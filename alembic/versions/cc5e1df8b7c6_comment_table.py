@@ -1,8 +1,8 @@
 """comment table
 
-Revision ID: 085dffc23428
+Revision ID: cc5e1df8b7c6
 Revises: 7bddf82cc2c5
-Create Date: 2023-08-02 13:55:36.788572
+Create Date: 2023-08-02 14:00:24.009326
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision = '085dffc23428'
+revision = 'cc5e1df8b7c6'
 down_revision = '7bddf82cc2c5'
 branch_labels = None
 depends_on = None

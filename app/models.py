@@ -47,6 +47,9 @@ class Recommendation(RecommendationBase, table=True):
     tags: list["Tag"] = Relationship(
         back_populates="recommendations", link_model=RecommendationTagLink
     )
+    comments: list["Comment"] = Relationship(
+        back_populates="recommendation", sa_relationship_kwargs={"cascade": "delete"}
+    )
 
 
 class Tag(TagBase, table=True):
@@ -62,5 +65,7 @@ class Comment(CommentBase, table=True):
     published: datetime = Field(default=datetime.utcnow())
     updated: datetime | None = Field(default=None)
     user_id: int = Field(foreign_key="user.id")
+    recommendation_id: int = Field(foreign_key="recommendation.id")
 
     user: User = Relationship(back_populates="comments")
+    recommendation: Recommendation = Relationship(back_populates="comments")
