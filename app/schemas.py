@@ -36,6 +36,8 @@ class FictionTypeBase(SQLModel):
     name: str = Field(min_length=4,
                       max_length=255,
                       unique=True)
+    slug: str = Field(min_length=4, max_length=300,
+                      unique=True)
 
 
 class FictionTypeRead(FictionTypeBase):
@@ -43,7 +45,8 @@ class FictionTypeRead(FictionTypeBase):
 
 
 class TagBase(SQLModel):
-    name: str
+    name: str = Field(unique=True, max_length=255,
+                      min_length=4)
 
 
 class TagRead(TagBase):
@@ -52,11 +55,22 @@ class TagRead(TagBase):
 
 class RecommendationRead(RecommendationBase):
     id: int
-    fiction_type: FictionTypeRead
     user_id: int
     published: datetime
-    updated: datetime
+    updated: datetime | None
+    fiction_type: FictionTypeRead
     tags: list[TagRead]
+
+
+class RecommendationUpdate(SQLModel):
+    title: str | None = Field(max_length=255, default=None)
+    short_description: str | None = Field(default=None)
+    opinion: str | None = Field(default=None)
+    fiction_type: str | None = Field(min_length=4,
+                                     max_length=255,
+                                     default=None)
+    tags: list[str] | None = Field(min_items=1,
+                                   default=None)
 
 
 class UserCreate(UserBase):
