@@ -89,6 +89,10 @@ class CommentCreate(CommentBase):
     pass
 
 
+class CommentUpdate(SQLModel):
+    content: str | None = Field(default=None)
+
+
 class UserCreate(UserBase):
     password: str = Field(min_length=8)
 
