@@ -53,6 +53,10 @@ class TagRead(TagBase):
     id: int
 
 
+class CommentBase(SQLModel):
+    content: str
+
+
 class RecommendationRead(RecommendationBase):
     id: int
     user_id: int

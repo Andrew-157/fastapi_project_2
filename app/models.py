@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
-from .schemas import UserBase, RecommendationBase, FictionTypeBase, TagBase
+from .schemas import UserBase, RecommendationBase, FictionTypeBase, TagBase, CommentBase
 
 
 class User(UserBase, table=True):
@@ -8,6 +8,9 @@ class User(UserBase, table=True):
     hashed_password: str
 
     recommendations: list["Recommendation"] = Relationship(
+        back_populates="user", sa_relationship_kwargs={"cascade": "delete"}
+    )
+    comments: list["Comment"] = Relationship(
         back_populates="user", sa_relationship_kwargs={"cascade": "delete"}
     )
 
@@ -52,3 +55,12 @@ class Tag(TagBase, table=True):
     recommendations: list["Recommendation"] = Relationship(
         back_populates="tags", link_model=RecommendationTagLink
     )
+
+
+class Comment(CommentBase, table=True):
+    id: int = Field(primary_key=True, default=None)
+    published: datetime = Field(default=datetime.utcnow())
+    updated: datetime | None = Field(default=None)
+    user_id: int = Field(foreign_key="user.id")
+
+    user: User = Relationship(back_populates="comments")
