@@ -77,6 +77,18 @@ class RecommendationUpdate(SQLModel):
                                    default=None)
 
 
+class CommentRead(CommentBase):
+    id: int
+    user_id: int
+    recommendation_id: int
+    published: datetime
+    updated: datetime | None
+
+
+class CommentCreate(CommentBase):
+    pass
+
+
 class UserCreate(UserBase):
     password: str = Field(min_length=8)
 
