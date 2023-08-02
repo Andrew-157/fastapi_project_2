@@ -1,4 +1,5 @@
 from sqlmodel import Session, select, and_
+from sqlalchemy import asc, desc
 from sqlalchemy.orm import joinedload
 from .models import User, Recommendation, FictionType, Comment, Reaction
 
@@ -35,7 +36,7 @@ def get_recommendations_by_fiction_type(session: Session, fiction_type: FictionT
     return session.exec(select(Recommendation).options(
         joinedload(Recommendation.fiction_type),
         joinedload(Recommendation.tags)).where(Recommendation.fiction_type_id == fiction_type.id).
-        order_by(Recommendation.title)).unique().all()
+        order_by(desc(Recommendation.title))).all()
 
 
 def get_comment_by_id_and_recommendation_id(session: Session,
@@ -44,6 +45,19 @@ def get_comment_by_id_and_recommendation_id(session: Session,
     return session.exec(select(Comment).
                         where(and_(Comment.recommendation_id == recommendation_id,
                                    Comment.id == comment_id))).first()
+
+
+def get_all_comments_for_recommendation(session: Session,
+                                        recommendation_id: int,
+                                        by_published_date_descending: bool | None):
+    if by_published_date_descending == False or by_published_date_descending is None:
+        return session.exec(select(Comment).
+                            where(Comment.recommendation_id == recommendation_id).
+                            order_by(asc(Comment.published))).all()
+    else:
+        return session.exec(select(Comment).
+                            where(Comment.recommendation_id == recommendation_id).
+                            order_by(desc(Comment.published))).all()
 
 
 def get_reaction_by_recommendation_id_and_user_id(session: Session,
@@ -56,7 +70,7 @@ def get_reaction_by_recommendation_id_and_user_id(session: Session,
 
 def get_all_reactions_for_recommendation(session: Session,
                                          recommendation_id: int,
-                                         is_positive: bool | None = None):
+                                         is_positive: bool | None):
     if is_positive is not None:
         return session.exec(select(Reaction).
                             where(and_(Reaction.is_positive == is_positive,

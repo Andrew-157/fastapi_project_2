@@ -119,8 +119,7 @@ async def update_recommendation(recommendation_id: Annotated[int, Path()],
     if recommendation.user_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"User has not permission to update \
-                recommendation with id {recommendation_id}"
+            detail=f"User has not permission to update recommendation with id {recommendation_id}"
         )
     data: dict = data.dict(exclude_unset=True)
     if not data:
@@ -170,8 +169,7 @@ async def delete_recommendation(recommendation_id: Annotated[int, Path()],
     if recommendation.user_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"User has no permission to delete \
-                    recommendation with id {recommendation_id}"
+            detail=f"User has no permission to delete recommendation with id {recommendation_id}"
         )
     session.delete(recommendation)
     session.commit()

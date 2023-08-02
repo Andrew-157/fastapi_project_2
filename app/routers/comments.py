@@ -1,11 +1,12 @@
 from datetime import datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Body, Path, HTTPException, status, Depends
+from fastapi import APIRouter, Body, Path, HTTPException, status, Depends, Query
 from sqlmodel import Session
 
 from ..auth import get_current_user
-from ..crud import get_recommendation_by_id, get_comment_by_id_and_recommendation_id
+from ..crud import get_recommendation_by_id, get_comment_by_id_and_recommendation_id, \
+    get_all_comments_for_recommendation
 from ..schemas import CommentRead, CommentCreate, CommentUpdate
 from ..models import Comment, User
 from ..database import get_session
@@ -14,6 +15,27 @@ from ..database import get_session
 router = APIRouter(
     tags=['comments']
 )
+
+
+@router.get('/recommendations/{recommendation_id}/comments',
+            response_model=list[CommentRead])
+async def get_comments(
+    recommendation_id: Annotated[int, Path()],
+    session: Annotated[Session, Depends(get_session)],
+    by_published_date_descending: Annotated[bool | None, Query()] = None
+):
+    recommendation = get_recommendation_by_id(session=session,
+                                              recommendation_id=recommendation_id)
+    if not recommendation:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Recommendation with id {recommendation_id} was not found"
+        )
+    comments = get_all_comments_for_recommendation(
+        session=session, recommendation_id=recommendation_id,
+        by_published_date_descending=by_published_date_descending
+    )
+    return comments
 
 
 @router.post('/recommendations/{recommendation_id}/comment',
@@ -31,8 +53,7 @@ async def post_comment(
     if not recommendation:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Recommendation with id {recommendation_id}\
-                was not found"
+            detail=f"Recommendation with id {recommendation_id} was not found"
         )
     new_comment = Comment(
         content=data.content,
