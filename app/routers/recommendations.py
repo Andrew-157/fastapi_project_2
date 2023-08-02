@@ -124,10 +124,10 @@ async def update_recommendation(recommendation_id: Annotated[int, Path()],
         )
     data: dict = data.dict(exclude_unset=True)
     if not data:
-        recommendation.updated = datetime.utcnow()
-        session.commit()
-        session.refresh(recommendation)
-        return recommendation
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No Body provided"
+        )
     new_title = data.get("title")
     new_short_description = data.get("short_description")
     new_opinion = data.get("opinion")

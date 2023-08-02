@@ -117,7 +117,7 @@ class CommentCreate(CommentBase):
 
 
 class CommentUpdate(SQLModel):
-    content: str | None = Field(default=None)
+    content: str
 
 
 # Reaction Schemas
@@ -136,4 +136,4 @@ class ReactionRead(ReactionBase):
 
 
 class ReactionUpdate(SQLModel):
-    is_positive: bool | None = Field(default=None)
+    is_positive: bool

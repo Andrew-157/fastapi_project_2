@@ -45,3 +45,29 @@ def get_comment_by_id_and_recommendation_id(session: Session,
                         where(and_(Comment.recommendation_id == recommendation_id,
                                    Comment.id == comment_id))).first()
 
+
+def get_reaction_by_recommendation_id_and_user_id(session: Session,
+                                                  recommendation_id: int,
+                                                  user_id: int) -> Reaction | None:
+    return session.exec(select(Reaction).
+                        where(and_(Reaction.recommendation_id == recommendation_id,
+                                   Reaction.user_id == user_id))).first()
+
+
+def get_all_reactions_for_recommendation(session: Session,
+                                         recommendation_id: int,
+                                         is_positive: bool | None = None):
+    if is_positive is not None:
+        return session.exec(select(Reaction).
+                            where(and_(Reaction.is_positive == is_positive,
+                                       Reaction.recommendation_id == recommendation_id))).all()
+    return session.exec(select(Reaction).
+                        where(Reaction.recommendation_id == recommendation_id)).all()
+
+
+def get_reaction_by_id_and_recommendation_id(session: Session,
+                                             recommendation_id: int,
+                                             reaction_id: int) -> Reaction | None:
+    return session.exec(select(Reaction).
+                        where(and_(Reaction.recommendation_id == recommendation_id,
+                                   Reaction.id == reaction_id))).first()

@@ -70,8 +70,8 @@ async def get_comment(recommendation_id: Annotated[int, Path()],
     return comment
 
 
-@router.patch('/recommendations/{recommendation_id}/comments/{comment_id}',
-              response_model=CommentRead)
+@router.put('/recommendations/{recommendation_id}/comments/{comment_id}',
+            response_model=CommentRead)
 async def update_comment(recommendation_id: Annotated[int, Path()],
                          comment_id: Annotated[int, Path()],
                          session: Annotated[Session, Depends(get_session)],
@@ -101,13 +101,12 @@ async def update_comment(recommendation_id: Annotated[int, Path()],
             status_code=status.HTTP_403_FORBIDDEN,
             detail=f"User has no permission to update comment with id {comment_id}"
         )
-    data: dict = data.dict(exclude_unset=True)
+    data: dict = data.dict()
     if not data:
-        comment.updated = datetime.utcnow()
-        session.add(comment)
-        session.commit()
-        session.refresh(comment)
-        return comment
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No Body provided"
+        )
     new_content = data.get('content')
     if new_content:
         comment.content = new_content
