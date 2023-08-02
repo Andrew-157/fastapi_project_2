@@ -1,5 +1,6 @@
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
+from sqlalchemy import UniqueConstraint
 from .schemas import UserBase, RecommendationBase, FictionTypeBase, TagBase, CommentBase, ReactionBase
 
 
@@ -84,3 +85,5 @@ class Reaction(ReactionBase, table=True):
 
     user: User = Relationship(back_populates="reactions")
     recommendation: Recommendation = Relationship(back_populates="reactions")
+    __table_args__ = (UniqueConstraint('user_id', 'recommendation_id',
+                                       name='user_recommendation_uc'),)

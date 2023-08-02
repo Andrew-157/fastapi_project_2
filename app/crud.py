@@ -1,6 +1,6 @@
 from sqlmodel import Session, select, and_
 from sqlalchemy.orm import joinedload
-from .models import User, Recommendation, FictionType, Comment
+from .models import User, Recommendation, FictionType, Comment, Reaction
 
 
 def get_user_with_username(session: Session, username: str) -> User:
@@ -44,3 +44,4 @@ def get_comment_by_id_and_recommendation_id(session: Session,
     return session.exec(select(Comment).
                         where(and_(Comment.recommendation_id == recommendation_id,
                                    Comment.id == comment_id))).first()
+
