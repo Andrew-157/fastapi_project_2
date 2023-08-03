@@ -77,7 +77,7 @@ async def post_recommendation(
     recommendation = Recommendation(
         title=data.title,
         short_description=data.short_description,
-        opinion=data.short_description,
+        opinion=data.opinion,
         fiction_type=fiction_type,
         tags=tags,
         user=current_user

@@ -78,6 +78,20 @@ class RecommendationCreate(RecommendationBase):
                               unique=True)
     tags: list[str] = Field(min_items=1)
 
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "title": "Whiplash",
+                    "short_description": "Music drama about young musician pursuing his dream",
+                    "opinion": "Amazing piece of art, I recommend watching it to everyone",
+                    "fiction_type": "movie",
+                    "tags": ["music", "drama", "jazz",]
+                }
+            ]
+        }
+    }
+
 
 class RecommendationRead(RecommendationBase):
     id: int
@@ -114,6 +128,16 @@ class CommentRead(CommentBase):
 
 class CommentCreate(CommentBase):
     pass
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "content": "Thank you for recommendation, amazing movie"
+                }
+            ]
+        }
+    }
 
 
 class CommentUpdate(SQLModel):
