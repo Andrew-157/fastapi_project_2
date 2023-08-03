@@ -14,6 +14,8 @@ python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 python-multipart = "*"
 email-validator = "*"
+httpx = "*"
+pytest = "*"
 
 [dev-packages]
 autopep8 = "*"
