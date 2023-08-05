@@ -15,7 +15,7 @@ def get_user_with_email(session: Session, email: str) -> User:
 def get_recommendation_by_id_with_tags_and_fiction_type(session: Session, recommendation_id: int) -> Recommendation | None:
     return session.exec(select(Recommendation).options(joinedload(Recommendation.fiction_type),
                                                        joinedload(Recommendation.tags)).
-                        where(Recommendation.id == recommendation_id)).first()
+                        where(Recommendation.id == recommendation_id)).unique().first()
 
 
 def get_recommendation_by_id(session: Session, recommendation_id: int) -> Recommendation | None:
@@ -36,7 +36,7 @@ def get_recommendations_by_fiction_type(session: Session, fiction_type: FictionT
     return session.exec(select(Recommendation).options(
         joinedload(Recommendation.fiction_type),
         joinedload(Recommendation.tags)).where(Recommendation.fiction_type_id == fiction_type.id).
-        order_by(desc(Recommendation.title))).all()
+        order_by(desc(Recommendation.title))).unique().all()
 
 
 def get_comment_by_id_and_recommendation_id(session: Session,

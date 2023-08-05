@@ -119,13 +119,13 @@ async def update_recommendation(recommendation_id: Annotated[int, Path()],
     if recommendation.user_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"User has not permission to update recommendation with id {recommendation_id}"
+            detail=f"User has no permission to update recommendation with id {recommendation_id}"
         )
     data: dict = data.dict(exclude_unset=True)
     if not data:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No Body provided"
+            detail="No data provided"
         )
     new_title = data.get("title")
     new_short_description = data.get("short_description")
