@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import pytest
 from fastapi.testclient import TestClient
 from fastapi import status
@@ -62,6 +60,12 @@ def test_get_recommendations(client: TestClient, session: Session):
     response = client.get('/recommendations?fiction_type_slug=guiopoijhg')
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == []
+    response = client.get('/recommendations?offset=1')
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()[0]['title'] == recommendation_2.title
+    response = client.get('/recommendations?limit=3')
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()[-1]['title'] == recommendation_3.title
 
 
 @pytest.mark.parametrize(

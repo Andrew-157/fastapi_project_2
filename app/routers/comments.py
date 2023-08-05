@@ -19,11 +19,14 @@ router = APIRouter(
 
 @router.get('/recommendations/{recommendation_id}/comments',
             response_model=list[CommentRead])
-async def get_comments(
-    recommendation_id: Annotated[int, Path()],
-    session: Annotated[Session, Depends(get_session)],
-    by_published_date_descending: Annotated[bool | None, Query()] = None
-):
+async def get_comments(*,
+                       recommendation_id: Annotated[int, Path()],
+                       session: Annotated[Session, Depends(get_session)],
+                       by_published_date_descending: Annotated[bool | None, Query(
+                       )] = None,
+                       offset: Annotated[int | None, Query(gt=0)] = None,
+                       limit: Annotated[int | None, Query(gt=0)] = None
+                       ):
     recommendation = get_recommendation_by_id(session=session,
                                               recommendation_id=recommendation_id)
     if not recommendation:
@@ -33,7 +36,8 @@ async def get_comments(
         )
     comments = get_all_comments_for_recommendation(
         session=session, recommendation_id=recommendation_id,
-        by_published_date_descending=by_published_date_descending
+        by_published_date_descending=by_published_date_descending,
+        offset=offset, limit=limit
     )
     return comments
 

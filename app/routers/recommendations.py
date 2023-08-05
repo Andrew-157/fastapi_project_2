@@ -48,9 +48,14 @@ def save_fiction_type(session: Session, fiction_type: str) -> FictionType:
 
 @router.get('/recommendations', response_model=list[RecommendationRead])
 async def get_recommendations(*, fiction_type_slug: Annotated[str | None, Query()] = None,
+                              offset: Annotated[int | None,
+                                                Query(gt=0)] = None,
+                              limit: Annotated[int | None, Query(gt=0)] = None,
                               session: Annotated[Session, Depends(get_session)]):
     if not fiction_type_slug:
-        recommendations = get_all_recommendations(session=session)
+        recommendations = get_all_recommendations(session=session,
+                                                  offset=offset,
+                                                  limit=limit)
         return recommendations
     else:
         fiction_type_object = get_fiction_type_by_slug(session=session,
@@ -59,7 +64,9 @@ async def get_recommendations(*, fiction_type_slug: Annotated[str | None, Query(
             return []
         else:
             recommendations = get_recommendations_by_fiction_type(session=session,
-                                                                  fiction_type=fiction_type_object)
+                                                                  fiction_type=fiction_type_object,
+                                                                  offset=offset,
+                                                                  limit=limit)
             return recommendations
 
 
