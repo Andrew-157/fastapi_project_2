@@ -42,7 +42,7 @@ async def get_comments(*,
     return comments
 
 
-@router.post('/recommendations/{recommendation_id}/comment',
+@router.post('/recommendations/{recommendation_id}/comments',
              response_model=CommentRead,
              status_code=status.HTTP_201_CREATED)
 async def post_comment(

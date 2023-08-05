@@ -99,6 +99,13 @@ def test_post_recommendation_with_no_data(client: TestClient, auth: AuthActions)
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 
+def test_post_recommendation_with_no_body(client: TestClient, auth: AuthActions):
+    token = auth.login_user_for_token()
+    headers = {'Authorization': f'Bearer {token}'}
+    response = client.post('/recommendations', json=None, headers=headers)
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
 def test_post_recommendation(client: TestClient, auth: AuthActions, session: Session):
     token = auth.login_user_for_token()
     headers = {'Authorization': f'Bearer {token}'}
@@ -212,6 +219,35 @@ def test_update_recommendation_validate_input(client: TestClient, auth: AuthActi
     response = client.patch(f'/recommendations/{recommendation.id}',
                             json={'fiction_type': fiction_type,
                                   'tags': tags}, headers=headers)
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
+def test_update_recommendation_with_no_data(client: TestClient, auth: AuthActions, session: Session):
+    test_user = session.exec(select(User).where(
+        User.username == 'test_user')).first()
+    fiction_type_obj = FictionType(name='movie', slug='movie')
+    recommendation = Recommendation(title='Interstellar',
+                                    short_description='Movie about space',
+                                    opinion='My favorite movie',
+                                    user=test_user,
+                                    fiction_type=fiction_type_obj)
+    session.add(recommendation)
+    session.commit()
+    token = auth.login_user_for_token()
+    headers = {'Authorization': f'Bearer {token}'}
+    response = client.patch(f'/recommendations/{recommendation.id}',
+                            json={}, headers=headers)
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert 'detail' in response.json()
+    error_detail = "No data provided"
+    assert response.json()['detail'] == error_detail
+
+
+def test_update_recommendation_with_no_body(client: TestClient, auth: AuthActions, session:  Session):
+    token = auth.login_user_for_token()
+    headers = {'Authorization': f'Bearer {token}'}
+    response = client.patch(f'/recommendations/89',
+                            json=None, headers=headers)
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 
