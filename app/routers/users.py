@@ -84,7 +84,10 @@ async def update_user(
 ):
     data: dict = data.dict(exclude_unset=True)
     if not data:
-        return current_user
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='No data provided'
+        )
     else:
         new_username = data.get("username")
         if new_username:
