@@ -107,7 +107,7 @@ async def update_comment(recommendation_id: Annotated[int, Path()],
     if not recommendation:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Comment with id {comment_id} for recommendation with id {recommendation_id} was not found"
+            detail=f"Recommendation with id {recommendation_id} was not found"
         )
     comment = get_comment_by_id_and_recommendation_id(
         session=session,
@@ -117,9 +117,7 @@ async def update_comment(recommendation_id: Annotated[int, Path()],
     if not comment:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Comment with id {comment_id}\
-                for recommendation with id {recommendation_id}\
-                was not found"
+            detail=f"Comment with id {comment_id} for recommendation with id {recommendation_id} was not found"
         )
     if comment.user_id != current_user.id:
         raise HTTPException(
@@ -127,11 +125,6 @@ async def update_comment(recommendation_id: Annotated[int, Path()],
             detail=f"User has no permission to update comment with id {comment_id}"
         )
     data: dict = data.dict()
-    if not data:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No Body provided"
-        )
     new_content = data.get('content')
     if new_content:
         comment.content = new_content
@@ -155,7 +148,7 @@ async def delete_comment(
     if not recommendation:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Comment with id {comment_id} for recommendation with id {recommendation_id} was not found"
+            detail=f"Recommendation with id {recommendation_id} was not found"
         )
     comment = get_comment_by_id_and_recommendation_id(
         session=session,

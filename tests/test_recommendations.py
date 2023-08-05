@@ -295,7 +295,7 @@ def test_logged_user_without_permission_updates_recommendation(client: TestClien
     assert response.json()['detail'] == error_detail
 
 
-def test_logged_updates_recommendation(client: TestClient, auth: AuthActions, session: Session):
+def test_logged_user_updates_recommendation(client: TestClient, auth: AuthActions, session: Session):
     test_user = session.exec(select(User).where(
         User.username == 'test_user')).first()
     fiction_type = FictionType(name='movie', slug='movie')
@@ -393,8 +393,11 @@ def test_logged_user_deletes_recommendation(client: TestClient, auth: AuthAction
                                     fiction_type=fiction_type)
     session.add(recommendation)
     session.commit()
+    recommendation_id = recommendation.id
     token = auth.login_user_for_token()
     headers = {'Authorization': f'Bearer {token}'}
     response = client.delete(
-        f'/recommendations/{recommendation.id}', headers=headers)
+        f'/recommendations/{recommendation_id}', headers=headers)
     assert response.status_code == status.HTTP_204_NO_CONTENT
+    recommendation = session.get(Recommendation, recommendation_id)
+    assert recommendation is None
