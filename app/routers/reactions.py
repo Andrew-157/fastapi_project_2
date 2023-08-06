@@ -22,7 +22,9 @@ router = APIRouter(
 async def get_reactions(*,
                         recommendation_id: Annotated[int, Path()],
                         is_positive: Annotated[bool | None, Query()] = None,
-                        session: Annotated[Session, Depends(get_session)]
+                        session: Annotated[Session, Depends(get_session)],
+                        offset: Annotated[int | None, Query(gt=0)] = None,
+                        limit: Annotated[int | None, Query(gt=0)] = None
                         ):
     recommendation = get_recommendation_by_id(session=session,
                                               recommendation_id=recommendation_id)
@@ -33,12 +35,12 @@ async def get_reactions(*,
         )
     reactions = get_all_reactions_for_recommendation(
         session=session, recommendation_id=recommendation_id,
-        is_positive=is_positive
+        is_positive=is_positive, offset=offset, limit=limit
     )
     return reactions
 
 
-@router.post('/recommendations/{recommendation_id}/react',
+@router.post('/recommendations/{recommendation_id}/reactions',
              response_model=ReactionRead,
              status_code=status.HTTP_201_CREATED)
 async def post_reaction(
@@ -98,7 +100,7 @@ async def get_reaction(
     if not reaction:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Comment with id {reaction_id} for recommendation with id {recommendation_id} was not found"
+            detail=f"Reaction with id {reaction_id} for recommendation with id {recommendation_id} was not found"
         )
     return reaction
 
@@ -128,7 +130,7 @@ async def update_reaction(
     if not reaction:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Comment with id {reaction_id} for recommendation with id {recommendation_id} was not found"
+            detail=f"Reaction with id {reaction_id} for recommendation with id {recommendation_id} was not found"
         )
     if reaction.user_id != current_user.id:
         raise HTTPException(
@@ -136,11 +138,6 @@ async def update_reaction(
             detail=f"User has no permission to update reaction with id {reaction_id}"
         )
     data: dict = data.dict()
-    if not data:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No body provided"
-        )
     new_is_positive = data.get("is_positive")
     reaction.is_positive = new_is_positive
     session.add(reaction)
@@ -173,12 +170,12 @@ async def delete_reaction(
     if not reaction:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Comment with id {reaction_id} for recommendation with id {recommendation_id} was not found"
+            detail=f"Reaction with id {reaction_id} for recommendation with id {recommendation_id} was not found"
         )
     if reaction.user_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"User has no permission to update reaction with id {reaction_id}"
+            detail=f"User has no permission to delete reaction with id {reaction_id}"
         )
     session.delete(reaction)
     session.commit()

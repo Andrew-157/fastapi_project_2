@@ -163,7 +163,7 @@ async def delete_comment(
     if comment.user_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"User has no permission to update comment with id {comment_id}"
+            detail=f"User has no permission to delete comment with id {comment_id}"
         )
     session.delete(comment)
     session.commit()
