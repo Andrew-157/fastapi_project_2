@@ -44,3 +44,58 @@ you will see:
         "is_root": true
     }
 ```
+
+### Installation
+
+**To work with this project you need `Python3.9+` installed on your machine**
+
+If you do not have `Python` installed, 
+visit official documentation and install it: https://www.python.org/downloads/
+
+Clone repository, using command:
+```
+    git clone https://github.com/Andrew-157/fastapi_project_2
+```
+
+Then, use command:
+```
+    cd fastapi_project_2
+```
+
+**Everything shown below assumes you are working from directory `fastapi_project_2`**
+
+Required packages:
+```
+    fastapi==0.100.1
+    sqlmodel==0.0.8
+    uvicorn==0.23.2
+    python-decouple==3.8
+    psycopg2-binary==2.9.7
+    alembic==1.11.2
+    python-jose==3.3.0
+    passlib==1.7.4
+    python-multipart==0.0.6
+    httpx==0.24.1
+    pytest==7.4.0
+    autopep8==2.0.2
+```
+
+If you are using `pipenv` for managing virtual environments, in command line run:
+```
+    pipenv install
+```
+And then to activate environment run:
+```
+    pipenv shell
+```
+
+You can also use file `requirements.txt` with pip.
+Inside your activated virtual environment, run:
+```
+    pip install -r requirements.txt
+```
+For `Windows`
+```
+    pip3 install -r requirements.txt
+```
+For `Unix`-based systems
