@@ -1,5 +1,4 @@
 from datetime import timedelta
-import pytest
 from fastapi.testclient import TestClient
 from fastapi import status
 from sqlmodel import Session, select
