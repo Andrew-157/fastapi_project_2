@@ -10,6 +10,8 @@ from app.auth import get_password_hash
 
 from .conftest import AuthActions
 
+# GET list
+
 
 def test_get_comments(client: TestClient, session: Session):
     test_user = session.exec(select(User).where(
@@ -64,6 +66,8 @@ def test_get_comments_for_nonexistent_recommendation(client: TestClient):
     assert 'detail' in response.json()
     error_detail = f"Recommendation with id {nonexistent_recommendation_id} was not found"
     assert response.json()['detail'] == error_detail
+
+# POST
 
 
 def test_post_comment_for_not_logged_user(client: TestClient):
@@ -174,6 +178,8 @@ def test_logged_user_posts_comment(client: TestClient, auth: AuthActions, sessio
     }
     assert response.json() == expected_data
 
+# GET detail
+
 
 def test_get_comment_for_nonexistent_recommendation(client: TestClient):
     nonexistent_recommendation_id = 99
@@ -231,6 +237,8 @@ def test_get_comment(client: TestClient, session: Session):
         'updated': None
     }
     assert response.json() == expected_data
+
+# PUT
 
 
 def test_update_comment_validate_input(client: TestClient, auth: AuthActions, session: Session):
@@ -403,6 +411,8 @@ def test_logged_user_updates_nonexistent_comment(client: TestClient, auth: AuthA
     assert response.status_code == status.HTTP_404_NOT_FOUND
     error_detail = f"Comment with id {nonexistent_comment_id} for recommendation with id {recommendation.id} was not found"
     assert response.json()['detail'] == error_detail
+
+# DELETE
 
 
 def test_not_logged_user_deletes_comment(client: TestClient):

@@ -9,6 +9,8 @@ from app.auth import get_password_hash
 
 from .conftest import AuthActions
 
+# GET list
+
 
 def test_get_reactions(client: TestClient, session: Session):
     test_user = session.exec(select(User).where(
@@ -75,6 +77,8 @@ def test_get_reactions_for_nonexistent_recommendation(client: TestClient):
     assert 'detail' in response.json()
     error_detail = f"Recommendation with id {nonexistent_recommendation_id} was not found"
     assert response.json()['detail'] == error_detail
+
+# POST
 
 
 def test_post_reaction_for_not_logged_user(client: TestClient):
@@ -179,7 +183,7 @@ def test_logged_user_posts_reaction(client: TestClient, auth: AuthActions, sessi
     assert response.json() == expected_data
 
 
-def test_user_with_reaction_posts_new_reactions(client: TestClient, auth: AuthActions, session: Session):
+def test_user_with_reaction_posts_new_reaction(client: TestClient, auth: AuthActions, session: Session):
     test_user = session.exec(select(User).where(
         User.username == 'test_user')).first()
     fiction_type = FictionType(name='movie', slug='movie')
@@ -207,6 +211,8 @@ def test_user_with_reaction_posts_new_reactions(client: TestClient, auth: AuthAc
              Reaction.recommendation_id == recommendation.id)
     )).all()
     assert len(reactions_by_user_for_recommendation) == 1
+
+# GET detail
 
 
 def test_get_reaction_for_nonexistent_recommendation(client: TestClient):
@@ -263,6 +269,8 @@ def test_get_reaction(client: TestClient, session: Session):
         'recommendation_id': reaction.recommendation_id
     }
     assert response.json() == expected_data
+
+# PUT
 
 
 def test_update_reaction_validate_input(client: TestClient, auth: AuthActions, session: Session):
@@ -437,6 +445,8 @@ def test_logged_user_updates_nonexistent_reaction(client: TestClient, auth: Auth
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert 'detail' in response.json()
     error_detail = f"Reaction with id {nonexistent_reaction_id} for recommendation with id {recommendation.id} was not found"
+
+# DELETE
 
 
 def test_not_logged_user_deletes_reaction(client: TestClient):

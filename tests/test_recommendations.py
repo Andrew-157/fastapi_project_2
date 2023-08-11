@@ -10,6 +10,8 @@ from app.auth import get_password_hash
 
 from .conftest import AuthActions
 
+# GET list
+
 
 def test_get_recommendations(client: TestClient, session: Session):
     test_user = session.exec(select(User).where(
@@ -66,6 +68,8 @@ def test_get_recommendations(client: TestClient, session: Session):
     response = client.get('/recommendations?limit=3')
     assert response.status_code == status.HTTP_200_OK
     assert response.json()[-1]['title'] == recommendation_3.title
+
+# POST
 
 
 @pytest.mark.parametrize(
@@ -158,6 +162,8 @@ def test_post_recommendation_for_not_logged_user(client: TestClient):
     assert "www-authenticate" in dict(response.headers)
     assert dict(response.headers)['www-authenticate'] == 'Bearer'
 
+# GET detail
+
 
 def test_get_recommendation(client: TestClient, session: Session):
     test_user = session.exec(select(User).where(
@@ -194,6 +200,8 @@ def test_get_recommendation(client: TestClient, session: Session):
 def test_get_nonexistent_recommendation(client: TestClient):
     response = client.get(f'/recommendations/{789}')
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+# PATCH
 
 
 @pytest.mark.parametrize(('fiction_type', 'tags'),
@@ -337,6 +345,8 @@ def test_logged_user_updates_recommendation(client: TestClient, auth: AuthAction
                      ]
                      }
     assert response.json() == expected_data
+
+# DELETE
 
 
 def test_not_logged_user_deletes_recommendation(client: TestClient):
