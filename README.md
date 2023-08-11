@@ -99,3 +99,66 @@ For `Windows`
     pip3 install -r requirements.txt
 ```
 For `Unix`-based systems
+
+### Run project
+
+**The following steps show how to run project locally(i.e., with DEBUG=True)**
+
+Generate `SECRET KEY` for your project, using the following code:
+```python
+    import secrets
+
+    secret_key = secrets.token_hex(34)
+
+    print(secret_key)
+```
+
+In root directory create file `.env`(**check that this file is in `.gitignore`**) and add the following line:
+```
+    SECRET_KEY=<your_secret_key>
+```
+
+Then you need to create `PostgreSQL` database(using pgAdmin or any other tool), using `SQL` statement:
+```SQL
+    CREATE DATABASE <your_database_name>;
+```
+
+Next, go to `.env` and, using your database credentials, add the following lines:
+```
+    DB_NAME=<your_database_name>
+    DB_USER=<your_database_user>
+    DB_PASSWORD=<your_database_password>
+    DB_HOST=<your_database_host>
+    DB_PORT=<your_database_port>
+```
+
+After that, in command line run:
+```
+    python manage.py migrate
+    python manage.py runserver
+```
+
+Go to your browser at the address: 'http://127.0.0.1:8000/', you will see:
+```JSON
+    {
+        "is_root": true
+    }
+```
+Visit url: 'http://127.0.0.1:8000/docs', you will see interactive documentation provided by `OpenAPI`.
+
+
+### Usage specifics
+
+This API uses `Oauth2` specification to define to handle authentication and authorization. To authenticate users need to provide header `Authorization` with value 'Bearer ' + `JWT`(JSON Web Token) token. You can get this token using path: '/auth/token', entering your username and password(if registered before this), if your credentials are valid, you will get response like this:
+```JSON
+    {
+        "access_token": "<generated_token>",
+        "token_type": "bearer"
+    }
+```
+
+Use this generated token in headers in your subsequent requests.
+
+**Make sure that you send username and password as `form-data`, as this is required by `Oauth2`**
+
+If you are not using using any clients to interact with API, interactive docs allow you to authenticate using `Authorize` button in top right corner.
