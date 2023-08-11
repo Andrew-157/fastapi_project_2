@@ -159,6 +159,59 @@ This API uses `Oauth2` specification to define to handle authentication and auth
 
 Use this generated token in headers in your subsequent requests.
 
-**Make sure that you send username and password as `form-data`, as this is required by `Oauth2`**
+**Make sure that you send username and password as `form-data`, as this is required by `Oauth2`.**
 
-If you are not using using any clients to interact with API, interactive docs allow you to authenticate using `Authorize` button in top right corner.
+If you are not using using any clients to interact with API, interactive docs allow you to authenticate using `Authorize` button in the top right corner.
+
+
+### API Endpoints
+
+`default`
+* `GET` '/' - API's root
+
+`users`
+* `POST` '/auth/register' - register
+* `POST` '/auth/token' - login for access token
+* `GET` '/users/me' - get currently authenticated user's credentials
+* `PATCH` '/users/me' - update currently authenticated user's credentials
+
+`recommendations`
+* `GET` '/recommendations' - get recommendation-list (query parameters can be provided)
+* `POST` '/recommendations' - post new recommendation(accessible only by authenticated users)
+* `GET` '/recommendations/{recommendation_id}' - get recommendation-detail
+* `PATCH` '/recommendations/{recommendation_id}' - update recommendation(accessible only be author of the recommendation)
+* `DELETE` '/recommendations/{recommendation_id}' - delete recommendation(accessible only be author of the recommendation)
+
+`comments`
+* `GET` '/recommendations/{recommendation_id}/comments' - get comment-list (query parameters can be provided)
+* `POST` '/recommendations{recommendation_id}/comments' - post new comment(accessible only by authenticated users)
+* `GET` '/recommendations/{recommendation_id}/comments/{comment_id}' - get comment-detail
+* `PATCH` '/recommendations/{recommendation_id}/comments/{comment_id}' - update comment(accessible only be author of the comment)
+* `DELETE` '/recommendations/{recommendation_id}/comments/{comment_id}' - delete comment(accessible only be author of the comment)
+
+`reactions`
+* `GET` '/recommendations/{recommendation_id}/reactions' - get reaction-list (query parameters can be provided)
+* `POST` '/recommendations{recommendation_id}/reactions' - post new reaction(accessible only by authenticated users)
+* `GET` '/recommendations/{recommendation_id}/reactions/{reaction_id}' - get reaction-detail
+* `PATCH` '/recommendations/{recommendation_id}/reactions/{reaction_id}' - update reaction(accessible only be author of the reaction)
+* `DELETE` '/recommendations/{recommendation_id}/reactions/{reaction_id}' - delete reaction(accessible only be author of the reaction)
+
+### Testing
+
+This API uses `Python`'s module `pytest` for running tests. All test modules as well as 'conftest.py' are
+in directory 'tests'. In 'conftest.py' you can find some `fixtures` used by tests.
+
+To run all tests, in command line run:
+```
+    pytest
+```
+
+To run particular module, run:
+```
+    pytest tests/test_users.py
+```
+
+To run particular test in a module, run:
+```
+    pytest tests/test_auth.py::test_register 
+``` 
