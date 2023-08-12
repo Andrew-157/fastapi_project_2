@@ -47,7 +47,7 @@ you will see:
 
 ### Installation
 
-**To work with this project you need `Python3.9+` installed on your machine**
+**To work with this project you need `Python` installed on your machine**
 
 If you do not have `Python` installed, 
 visit official documentation and install it: https://www.python.org/downloads/
@@ -134,8 +134,8 @@ Next, go to `.env` and, using your database credentials, add the following lines
 
 After that, in command line run:
 ```
-    python manage.py migrate
-    python manage.py runserver
+    alembic upgrade head
+    uvicorn app.main:app --reload
 ```
 
 Go to your browser at the address: 'http://127.0.0.1:8000/', you will see:
