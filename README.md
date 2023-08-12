@@ -145,6 +145,7 @@ Go to your browser at the address: 'http://127.0.0.1:8000/', you will see:
     }
 ```
 Visit url: 'http://127.0.0.1:8000/docs', you will see interactive documentation provided by `OpenAPI`.
+You can also visit 'http://127.0.0.1:8000/redoc' for alternative documentation.
 
 
 ### Usage specifics
