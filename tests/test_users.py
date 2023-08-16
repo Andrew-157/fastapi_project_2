@@ -70,6 +70,8 @@ def test_login_with_invalid_data(client: TestClient):
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert "www-authenticate" in dict(response.headers)
     assert dict(response.headers)['www-authenticate'] == 'Bearer'
+    assert 'detail' in response.json()
+    assert response.json() == {'detail': 'Incorrect username or password'}
 
 
 def test_login(client: TestClient, session: Session):
