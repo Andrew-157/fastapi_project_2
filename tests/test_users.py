@@ -71,6 +71,7 @@ def test_login(client: TestClient, session: Session):
     response = client.post('/auth/token',
                            data={'username': 'new_user',
                                  'password': '34somepassword34'})
+    assert response.status_code == status.HTTP_200_OK
     assert "access_token" in response.json()
     assert "token_type" in response.json()
     assert response.json()["token_type"] == "bearer"
