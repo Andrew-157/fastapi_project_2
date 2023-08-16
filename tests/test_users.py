@@ -25,6 +25,16 @@ def test_register(client: TestClient, session: Session):
     assert response.json() == expected_data
 
 
+def test_register_with_empty_body(client: TestClient):
+    response = client.post('/auth/register', json={})
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
+def test_register_with_no_body(client: TestClient):
+    response = client.post('/auth/register', json=None)
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
 @pytest.mark.parametrize(('username', 'email', 'password'),
                          ((None, 'new_email@gmail.com', '34somepassword34'),
                           ('new_user', None, '34somepassword34'),
@@ -151,6 +161,14 @@ def test_update_user_with_no_data(client: TestClient, auth: AuthActions):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert 'detail' in response.json()
     assert response.json()['detail'] == 'No data provided'
+
+
+def test_update_user_with_no_body(client: TestClient, auth: AuthActions):
+    token = auth.login_user_for_token()
+    headers = {'Authorization': f'Bearer {token}'}
+    response = client.patch('/auth/users/me', json=None,
+                            headers=headers)
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 
 def test_update_user_username(client: TestClient, auth: AuthActions, session: Session):
